@@ -16,7 +16,6 @@ class CreateZipCodesTable extends Migration
         Schema::create('zip_codes', function (Blueprint $table) {
             $table->increments('id');
             $table->string('zip_code');
-            $table->integer('country_id');
             $table->timestamps();
         });
     }

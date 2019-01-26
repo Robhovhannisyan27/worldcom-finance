@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Country;
+use App\zipCode;
 use App\Place;
 
 class PlaceController extends Controller
@@ -36,7 +37,21 @@ class PlaceController extends Controller
      */
     public function store(Request $request)
     {
-        
+        $places = $request->places;
+        $zipCode = zipCode::where(['zip_code' => $request->zip_code])->first();
+        if($zipCode === null) {
+            $zipCode = zipCode::create(['zip_code' => $request->zip_code]);
+        }
+        $country = Country::where('name', $request->country)->first();
+        foreach ($places as $place) {
+            $inputs['name'] = $place["place name"];
+            $inputs['longitude'] = $place['longitude'];
+            $inputs['latitude'] = $place['latitude'];
+            $inputs['country_id'] = $country->id;
+            $inputs['zip_code_id'] = $zipCode->id;
+            Place::create($inputs);   
+        }
+        return response()->json(['status' => 'success'], 200);
     }
 
     /**

@@ -11,5 +11,5 @@
 |
 */
 
-Route::resource('/', 'PlaceController');
+Route::resource('/', 'PlaceController')->only(['store', 'index']);
 Route::post('/places', 'PlaceController@isPlaceExists');

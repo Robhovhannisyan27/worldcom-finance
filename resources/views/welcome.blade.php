@@ -52,18 +52,8 @@
                 width: 500px;
             }
 
-            .title {
-                font-size: 84px;
-            }
-
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 13px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
+            .table {
+                margin-top: 20px;
             }
 
             .m-b-md {
@@ -71,7 +61,7 @@
             }
         </style>
     </head>
-    <body>
+    <body>        
         <div class="flex-center position-ref full-height">
             @if (Route::has('login'))
                 <div class="top-right links">
@@ -88,6 +78,8 @@
             @endif
 
             <div class="content">
+                <div class="alert alert-danger">
+                </div>
                 <form method="post" class="places_form" action="/">
                     @csrf
                     <div class="form-group">
@@ -104,55 +96,9 @@
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
+                @include('table')
             </div>
         </div>
-        <script>
-            $('.places_form').submit(function(e) {
-                e.preventDefault();
-                var places = [],
-                    country = $('#select_country').val(),
-                    zip_code = $('#select_zip_code').val();
-
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                        'Access-Control-Allow-Origin': '*'
-                    }
-                });
-                $.ajax({
-                    type:'POST',
-                    url:'/places',
-                    data: {
-                        country,
-                        zip_code
-                    },
-                    success:function(data) {
-                        if(!data.length){
-                            $.ajax({
-                                type:'POST',
-                                url:`http://api.zippopotam.us/${country}/${zip_code}`,
-                            })
-                            $.get(`http://api.zippopotam.us/${country}/${zip_code}`).then(res => {
-                                if(res.places.length) {
-                                    places = res.places;
-                                    $.ajax({
-                                        type:'POST',
-                                        url: '/',
-                                        data: { places },
-                                        success: function(data) {
-                                            console.log('success');
-                                        }
-                                    })
-                                } else {
-                                    alert('error');
-                                }
-                            })
-                        } else {
-                            places = data;
-                        }
-                    }
-                }); 
-            })
-        </script>
+        <script src="{{ asset('js/index.js') }}"></script>
     </body>
 </html>
